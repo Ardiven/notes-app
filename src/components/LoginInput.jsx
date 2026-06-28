@@ -13,7 +13,6 @@ function LoginInput(){
   const handleSubmit = (e) => {
     e.preventDefault();
     onlogin(email, password);
-    // window.location.href = '/';
   };
   return (
     <>

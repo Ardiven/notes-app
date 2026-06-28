@@ -15,10 +15,8 @@ import { NotesProvider } from './contexts/NotesContext'
 import './styles/style.css'
 
 function App () {
-  
-
   const [theme, setTheme] = React.useState('dark');
-  
+
   const toggleTheme = () => {
     setTheme((prevTheme) => {
       return prevTheme === 'light' ? 'dark' : 'light';
@@ -34,81 +32,68 @@ function App () {
 
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    console.log(theme);
   }, [theme]);
 
   const {user, initializing} = useAuth();
 
-
   if (initializing) {
     return (
-      <>
-        <ThemeContext.Provider value={themeContextValue}>
-          <LangProvider>
-            
-            <div className="app-container">
-              <header>
-                <NoteHeader />
-              </header>
-              <main>
-                <p>fetch...</p>
-              </main>
-            </div>
-          </LangProvider>
-        </ThemeContext.Provider>
-      </>
+      <ThemeContext.Provider value={themeContextValue}>
+        <LangProvider>
+          <div className="app-container">
+            <header>
+              <NoteHeader />
+            </header>
+            <main>
+              <p>fetch...</p>
+            </main>
+          </div>
+        </LangProvider>
+      </ThemeContext.Provider>
     )
   }
 
   if (!user) {
     return (
-      <>
-        <ThemeContext.Provider value={themeContextValue}>
-          <LangProvider>
-            
-            <div className="app-container">
-              <header>
-                <NoteHeader />
-              </header>
-              <main>
-                <Routes>
-                  <Route path="/*" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />}></Route>
-                </Routes>
-              </main>
-            </div>
-          </LangProvider>
-        </ThemeContext.Provider>
-      </>
-    )
-  }
-
-  return (
-    <>
       <ThemeContext.Provider value={themeContextValue}>
         <LangProvider>
-          
           <div className="app-container">
             <header>
               <NoteHeader />
             </header>
-            <NotesProvider>
-              <main>
-                <Routes>
-                  <Route path="/" element={<ActivePage />} />
-                  <Route path="/archives" element={<ArchivePage />} />
-                  <Route path='/notes/:id' element={<DetailPage />} />
-                  <Route path="/notes/new" element={<AddPage />} />
-                </Routes>
-              </main>
-            </NotesProvider>
+            <main>
+              <Routes>
+                <Route path="/*" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />}></Route>
+              </Routes>
+            </main>
           </div>
         </LangProvider>
       </ThemeContext.Provider>
-    </>
+    )
+  }
+
+  return (
+    <ThemeContext.Provider value={themeContextValue}>
+      <LangProvider>
+        <div className="app-container">
+          <header>
+            <NoteHeader />
+          </header>
+          <NotesProvider>
+            <main>
+              <Routes>
+                <Route path="/" element={<ActivePage />} />
+                <Route path="/archives" element={<ArchivePage />} />
+                <Route path='/notes/:id' element={<DetailPage />} />
+                <Route path="/notes/new" element={<AddPage />} />
+              </Routes>
+            </main>
+          </NotesProvider>
+        </div>
+      </LangProvider>
+    </ThemeContext.Provider>
   )
 }
-
-
 
 export default App

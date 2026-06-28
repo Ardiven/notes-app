@@ -5,7 +5,6 @@ import LangContext from "../contexts/LangContext";
 import ThemeContext from "../contexts/ThemeContext";
 import { MdGTranslate  } from "react-icons/md";
 import { FiSun, FiMoon, FiLogOut  } from "react-icons/fi";
-import { AuthProvider } from "../contexts/AuthContext";
 import useAuth from "../hooks/useAuth";
 
 function NoteHeader() {
@@ -19,13 +18,11 @@ function NoteHeader() {
     }
     return (
         <>
-        <AuthProvider>
             <h1><Link to="/">{lang === 'id' ? 'Aplikasi Catatan' : 'Note App'}</Link></h1>
             <NoteNav />
             <button className="toggle-lang" onClick={toggleLang}><MdGTranslate  /></button>
             <button className="toggle-theme" onClick={toggleTheme}> {theme === 'light' ? <FiMoon /> : <FiSun /> }</button>
-            <button className="button-logout" onClick={handleLogout}><FiLogOut /></button>  
-        </AuthProvider>
+            <button className="button-logout" onClick={handleLogout}><FiLogOut /></button>
         </>
     );
 }

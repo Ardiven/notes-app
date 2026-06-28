@@ -13,12 +13,21 @@ export function AuthProvider({ children }) {
         const accessToken = localStorage.getItem('accessToken');
 
         if (accessToken) {
-            getUserLogged().then((response) => {
-                if (!response.error) {
-                    setUser(response.data.name);
-                }
-                setInitializing(false);
-            });
+            getUserLogged()
+                .then((response) => {
+                    if (!response.error) {
+                        setUser(response.data.name);
+                    } else {
+                        // token invalid/expired → bersihkan agar tidak loop
+                        localStorage.removeItem('accessToken');
+                    }
+                    setInitializing(false);
+                })
+                .catch(() => {
+                    // request gagal (network/CORS) → tetap lanjut agar UI tidak stuck
+                    localStorage.removeItem('accessToken');
+                    setInitializing(false);
+                });
         } else {
             setInitializing(false);
         }
