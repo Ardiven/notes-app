@@ -1,6 +1,6 @@
 import React from "react";
 import useAuth from "@hooks/useAuth";
-import useInput from "@hooks/useInput";
+import useInput from "../hooks/useInput";
 import { Link } from "react-router-dom";
 import useLang from "@hooks/useLang";
 import { validateAuthForm } from "@utils/validation";
