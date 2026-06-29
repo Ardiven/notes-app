@@ -35,10 +35,12 @@ export function AuthProvider({ children }) {
 
 
     const onlogin = React.useCallback(async (email, password) => {
+        console.log('[auth] onlogin start', { email });
         setLoading(true);
         setAuthError(null);
         setAuthSuccess(null);
         const response = await login({ email, password });
+        console.log('[auth] onlogin response', response);
 
         if (response.error) {
             setLoading(false);
@@ -47,8 +49,10 @@ export function AuthProvider({ children }) {
         }
 
         putAccessToken(response.data.accessToken);
+        console.log('[auth] setUser', response.data.name);
         setUser(response.data.name);
         setLoading(false);
+        console.log('[auth] onlogin done, user=', response.data.name);
         return { error: false };
     }, []);
 

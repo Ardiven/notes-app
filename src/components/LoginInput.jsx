@@ -41,9 +41,9 @@ function LoginInput() {
     setErrors(fieldErrors);
     setTouched({ email: true, password: true });
     if (Object.keys(fieldErrors).length > 0) return;
-    // No navigate() here — the RedirectIfAuthed route guard will
-    // bounce the user to '/' automatically once user state is set.
+    console.log('[login] before onlogin');
     await onlogin(email, password);
+    console.log('[login] after onlogin, url=', window.location.pathname);
   };
 
   return (
