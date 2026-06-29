@@ -37,11 +37,14 @@ function ArchivePage() {
               keywordChange={onKeywordChangeHandler}
               />
 
-              <NoteList notes={filteredNotes} />
+              <NoteList
+                  notes={filteredNotes}
+                  isArchive
+              />
 
               <div className="homepage__action">
               <NoteActionButton
-                  variant="Tambah"
+                  actionKey="add"
                   onClick={() => navigate('/notes/new')}
                   icon={<FiPlus />}
               />

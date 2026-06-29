@@ -37,11 +37,14 @@ function ActivePage() {
               keywordChange={onKeywordChangeHandler}
               />
 
-              <NoteList notes={filteredNotes} />
+              <NoteList
+                  notes={filteredNotes}
+                  onAddNew={() => navigate('/notes/new')}
+              />
 
               <div className="homepage__action">
               <NoteActionButton
-                  variant="Tambah"
+                  actionKey="add"
                   onClick={() => navigate('/notes/new')}
                   icon={<FiPlus />}
               />

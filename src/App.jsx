@@ -11,6 +11,7 @@ import DetailPage from '@pages/DetailPage'
 import AddPage from '@pages/AddPage'
 import useAuth from "@hooks/useAuth"
 import { NotesProvider } from '@contexts/NotesContext'
+import Loading from '@components/Loading'
 
 import './styles/style.css'
 
@@ -26,7 +27,7 @@ function App () {
               <NoteHeader />
             </header>
             <main>
-              <p>fetch...</p>
+              <Loading />
             </main>
           </div>
         </LangProvider>

@@ -23,9 +23,30 @@ function NoteHeader() {
         <>
             <h1 className="header__title"><Link to="/">{lang === 'id' ? 'Aplikasi Catatan' : 'Note App'}</Link></h1>
             <NoteNav />
-            <button className="toggle-lang" onClick={toggleLang}><MdGTranslate  /></button>
-            <button className="toggle-theme" onClick={toggleTheme}> {theme === 'light' ? <FiMoon /> : <FiSun /> }</button>
-            <button className="button-logout" onClick={handleLogout}><FiLogOut /></button>
+            <button
+                className="toggle-lang"
+                onClick={toggleLang}
+                aria-label={lang === 'id' ? 'Ganti bahasa' : 'Toggle language'}
+                title={lang === 'id' ? 'Ganti bahasa' : 'Toggle language'}
+            >
+                <MdGTranslate />
+            </button>
+            <button
+                className="toggle-theme"
+                onClick={toggleTheme}
+                aria-label={lang === 'id' ? 'Ganti tema' : 'Toggle theme'}
+                title={lang === 'id' ? 'Ganti tema' : 'Toggle theme'}
+            >
+                {theme === 'light' ? <FiMoon /> : <FiSun />}
+            </button>
+            <button
+                className="button-logout"
+                onClick={handleLogout}
+                aria-label={lang === 'id' ? 'Keluar' : 'Logout'}
+                title={lang === 'id' ? 'Keluar' : 'Logout'}
+            >
+                <FiLogOut />
+            </button>
         </>
     );
 }

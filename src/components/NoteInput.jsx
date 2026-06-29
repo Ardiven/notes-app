@@ -3,9 +3,11 @@ import useInput from "@hooks/useInput";
 import NoteActionButton from "./NoteActionButton";
 import {useNavigate} from "react-router-dom";
 import { FiCheckCircle } from "react-icons/fi";
+import useLang from "@hooks/useLang";
 
 function NoteInput ({addNote}){
   const navigate = useNavigate();
+  const { lang } = useLang();
   const [title, onTitleChangeEventHandler, setTitle] = useInput('');
   const [body, onBodyChangeEventHandler, setBody] = useInput('');
 
@@ -28,7 +30,7 @@ function NoteInput ({addNote}){
           <input
             className="add-new-page__input__title"
             type="text"
-            placeholder="Ini adalah judul ..."
+            placeholder={lang === 'id' ? "Ini adalah judul ..." : "This is the title..."}
             value={title}
             onChange={onTitleChangeEventHandler}
             required
@@ -37,7 +39,7 @@ function NoteInput ({addNote}){
           <div className="add-new-page__perforation" />
           <textarea
             className="add-new-page__input__body"
-            placeholder="Tuliskan catatanmu di sini ..."
+            placeholder={lang === 'id' ? "Tuliskan catatanmu di sini ..." : "Write your note here..."}
             value={body}
             onChange={onBodyChangeEventHandler}
             required
@@ -45,7 +47,7 @@ function NoteInput ({addNote}){
           />
           <div className="add-new-page__action">
             <NoteActionButton
-              variant={"simpan"}
+              actionKey="save"
               icon={<FiCheckCircle/>}
               onClick={onSubmitEventHandler}
             />

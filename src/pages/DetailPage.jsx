@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useNote from "@hooks/useNote";
 import NoteDetail from "@components/NoteDetail";
 import NoteActionButton from "@components/NoteActionButton";
+import Loading from "@components/Loading";
 import { FiArchive, FiTrash2, FiShare } from "react-icons/fi";
 
 function DetailPage() {
@@ -29,7 +30,7 @@ function DetailPage() {
     };
 
     if (loading || !notes || notes.length === 0) {
-        return <p>fetch...</p>;
+        return <Loading />;
     }
 
     const note = notes[0];
@@ -39,12 +40,12 @@ function DetailPage() {
             <NoteDetail note={note} />
             <div className="detail-page__action">
                 <NoteActionButton
-                    variant={note.archived ? "Pindahkan" : "Arsipkan"}
+                    actionKey={note.archived ? "unarchive" : "archive"}
                     onClick={() => handleArchive(note)}
                     icon={note.archived ? <FiShare /> : <FiArchive />}
                 />
                 <NoteActionButton
-                    variant="Hapus"
+                    actionKey="delete"
                     onClick={() => handleDelete(note)}
                     icon={<FiTrash2 />}
                 />

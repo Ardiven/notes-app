@@ -142,17 +142,95 @@ main {
   padding: var(--space-3) var(--space-2);
 }
 
-.notes-list-empty {
-  margin-top: var(--space-5);
-  padding: var(--space-3) var(--space-2);
-}
-
-.notes-list-empty p {
-  text-align: center;
-  color: var(--on-background-grey);
+/* Loading spinner */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
   font-family: var(--font-meta);
   font-size: var(--text-meta);
   letter-spacing: 0.02em;
+  color: var(--on-background-grey);
+}
+
+.loading__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-hairline);
+  border-top-color: var(--ink-amber);
+  border-radius: 50%;
+  animation: loading-spin 0.8s linear infinite;
+}
+
+@keyframes loading-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading__spinner {
+    animation-duration: 2s;
+  }
+}
+
+/* Empty state visual */
+.notes-list-empty {
+  margin-top: var(--space-5);
+  padding: var(--space-6) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  border: 1px dashed var(--border-hairline);
+  border-radius: 8px;
+  background-color: var(--surface);
+}
+
+.notes-list-empty__icon {
+  font-size: 3rem;
+  color: var(--on-background-grey);
+  margin-bottom: var(--space-2);
+}
+
+.notes-list-empty__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-body-lg);
+  color: var(--on-background);
+}
+
+.notes-list-empty__subtitle,
+.notes-list-empty__hint {
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+  color: var(--on-background-grey);
+}
+
+.notes-list-empty__action {
+  margin-top: var(--space-3);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-ui);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 8px;
+  border: 1px solid var(--ink-amber);
+  background-color: transparent;
+  color: var(--ink-amber);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.notes-list-empty__action:hover {
+  background-color: var(--ink-amber);
+  color: var(--background);
+}
+
+.notes-list-empty__action:focus-visible {
+  outline: 2px solid var(--ink-amber);
+  outline-offset: 2px;
 }
 
 /* Kartu dengan folded corner */
