@@ -1,7 +1,7 @@
 import React from "react";
 import useAuth from "@hooks/useAuth";
 import useInput from "@hooks/useInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useLang from "@hooks/useLang";
 import { validateAuthForm } from "@utils/validation";
 
@@ -10,6 +10,7 @@ function LoginInput() {
   const [email, handleEmailChange] = useInput("");
   const [password, handlePasswordChange] = useInput("");
   const { lang } = useLang();
+  const navigate = useNavigate();
 
   const [touched, setTouched] = React.useState({});
   const [errors, setErrors] = React.useState({});
@@ -35,13 +36,16 @@ function LoginInput() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const fieldErrors = validateAuthForm({ email, password });
     setErrors(fieldErrors);
     setTouched({ email: true, password: true });
     if (Object.keys(fieldErrors).length > 0) return;
-    onlogin(email, password);
+    const result = await onlogin(email, password);
+    if (result && !result.error) {
+      navigate("/");
+    }
   };
 
   return (

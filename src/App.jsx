@@ -1,81 +1,72 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import LoginPage from '@pages/LoginPage'
-import RegisterPage from '@pages/RegisterPage'
-import ActivePage from '@pages/ActivePage'
-import ArchivePage from '@pages/ArchivePage'
-import NoteHeader  from '@components/NoteHeader'
-import { LangProvider } from '@contexts/LangContext'
-import { ThemeProvider } from '@contexts/ThemeContext'
-import DetailPage from '@pages/DetailPage'
-import AddPage from '@pages/AddPage'
-import useAuth from "@hooks/useAuth"
-import { NotesProvider } from '@contexts/NotesContext'
-import Loading from '@components/Loading'
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import LoginPage from '@pages/LoginPage';
+import RegisterPage from '@pages/RegisterPage';
+import ActivePage from '@pages/ActivePage';
+import ArchivePage from '@pages/ArchivePage';
+import NoteHeader from '@components/NoteHeader';
+import { LangProvider } from '@contexts/LangContext';
+import { ThemeProvider } from '@contexts/ThemeContext';
+import DetailPage from '@pages/DetailPage';
+import AddPage from '@pages/AddPage';
+import useAuth from "@hooks/useAuth";
+import { AuthProvider } from '@contexts/AuthContext';
+import { NotesProvider } from '@contexts/NotesContext';
+import Loading from '@components/Loading';
 
-import './styles/style.css'
+import './styles/style.css';
 
-function App () {
-  const {user, initializing} = useAuth();
+function AuthGate({ children }) {
+  const { user, initializing } = useAuth();
 
   if (initializing) {
     return (
-      <ThemeProvider>
-        <LangProvider>
-          <div className="app-container">
-            <header>
-              <NoteHeader />
-            </header>
-            <main>
-              <Loading />
-            </main>
-          </div>
-        </LangProvider>
-      </ThemeProvider>
-    )
-  }
-
-  if (!user) {
-    return (
-      <ThemeProvider>
-        <LangProvider>
-          <div className="app-container">
-            <header>
-              <NoteHeader />
-            </header>
-            <main>
-              <Routes>
-                <Route path="/*" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />}></Route>
-              </Routes>
-            </main>
-          </div>
-        </LangProvider>
-      </ThemeProvider>
-    )
+      <div className="app-container">
+        <header><NoteHeader /></header>
+        <main><Loading /></main>
+      </div>
+    );
   }
 
   return (
-    <ThemeProvider>
-      <LangProvider>
-        <div className="app-container">
-          <header>
-            <NoteHeader />
-          </header>
-          <NotesProvider>
-            <main>
-              <Routes>
+    <NotesProvider>
+      <div className="app-container">
+        <header><NoteHeader /></header>
+        <main>
+          <Routes>
+            {!user ? (
+              <>
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/*" element={<LoginPage />} />
+              </>
+            ) : (
+              <>
                 <Route path="/" element={<ActivePage />} />
                 <Route path="/archives" element={<ArchivePage />} />
-                <Route path='/notes/:id' element={<DetailPage />} />
                 <Route path="/notes/new" element={<AddPage />} />
-              </Routes>
-            </main>
-          </NotesProvider>
-        </div>
-      </LangProvider>
-    </ThemeProvider>
-  )
+                <Route path="/notes/:id" element={<DetailPage />} />
+                <Route path="/*" element={<ActivePage />} />
+              </>
+            )}
+          </Routes>
+        </main>
+      </div>
+    </NotesProvider>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <BrowserRouter>
+      <ThemeProvider>
+        <LangProvider>
+          <AuthProvider>
+            <AuthGate />
+          </AuthProvider>
+        </LangProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  );
+}
+
+export default App;

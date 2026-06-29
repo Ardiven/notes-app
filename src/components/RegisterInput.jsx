@@ -1,7 +1,7 @@
 import React from "react";
 import useAuth from "@hooks/useAuth";
 import useInput from "@hooks/useInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useLang from "@hooks/useLang";
 import { validateAuthForm } from "@utils/validation";
 
@@ -11,6 +11,7 @@ function RegisterInput() {
     const [email, handleEmailChange] = useInput("");
     const [password, handlePasswordChange] = useInput("");
     const { lang } = useLang();
+    const navigate = useNavigate();
 
     const [touched, setTouched] = React.useState({});
     const [errors, setErrors] = React.useState({});
@@ -22,13 +23,16 @@ function RegisterInput() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const fieldErrors = validateAuthForm({ name, email, password, isRegister: true });
         setErrors(fieldErrors);
         setTouched({ name: true, email: true, password: true });
         if (Object.keys(fieldErrors).length > 0) return;
-        onregister(name, email, password);
+        const result = await onregister(name, email, password);
+        if (result && !result.error) {
+            navigate("/login");
+        }
     };
 
     const fieldClass = (field) =>
