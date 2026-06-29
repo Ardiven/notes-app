@@ -434,6 +434,24 @@ main {
   padding: calc(var(--space-2) - 1px);
 }
 
+.input-login input.input--error,
+.input-register input.input--error {
+  border-color: var(--error);
+}
+
+.input-login input.input--error:focus,
+.input-register input.input--error:focus {
+  border-color: var(--error);
+}
+
+.field-error {
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+  color: var(--error);
+  margin: calc(var(--space-1) * -1) 0 var(--space-2);
+}
+
 .input-login button,
 .input-register button {
   font-family: var(--font-body);
