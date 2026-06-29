@@ -35,12 +35,10 @@ export function AuthProvider({ children }) {
 
 
     const onlogin = React.useCallback(async (email, password) => {
-        console.log('[auth] onlogin start', { email });
         setLoading(true);
         setAuthError(null);
         setAuthSuccess(null);
         const response = await login({ email, password });
-        console.log('[auth] onlogin response', response);
 
         if (response.error) {
             setLoading(false);
@@ -48,11 +46,19 @@ export function AuthProvider({ children }) {
             return { error: true, message: response.message };
         }
 
+        // /login endpoint returns { accessToken, userId } — no name.
+        // Persist token then fetch profile to get the name.
         putAccessToken(response.data.accessToken);
-        console.log('[auth] setUser', response.data.name);
-        setUser(response.data.name);
+
+        const profileResponse = await getUserLogged();
+        if (profileResponse.error) {
+            setLoading(false);
+            setAuthError(profileResponse.message || 'Login failed');
+            return { error: true, message: profileResponse.message };
+        }
+
+        setUser(profileResponse.data.name);
         setLoading(false);
-        console.log('[auth] onlogin done, user=', response.data.name);
         return { error: false };
     }, []);
 

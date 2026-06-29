@@ -41,9 +41,7 @@ function LoginInput() {
     setErrors(fieldErrors);
     setTouched({ email: true, password: true });
     if (Object.keys(fieldErrors).length > 0) return;
-    console.log('[login] before onlogin');
     await onlogin(email, password);
-    console.log('[login] after onlogin, url=', window.location.pathname);
   };
 
   return (

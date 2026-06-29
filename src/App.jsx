@@ -29,10 +29,8 @@ function RequireAuth({ children }) {
 
 function RedirectIfAuthed({ children }) {
   const { user } = useAuth();
-  console.log('[RedirectIfAuthed] render, user=', user);
   if (user) {
     // If user is logged in but on /login or /register, bounce to /
-    console.log('[RedirectIfAuthed] user exists, navigate to /');
     return <Navigate to="/" replace />;
   }
   return children;
