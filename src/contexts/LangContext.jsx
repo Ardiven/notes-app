@@ -5,14 +5,14 @@ const LangContext = React.createContext();
 export function LangProvider({ children }) {
   const [lang, setLang] = React.useState('id');
 
-  const toggleLang = () => {
+  const toggleLang = React.useCallback(() => {
     setLang((prevLang) => (prevLang === 'id' ? 'en' : 'id'));
-  };
+  }, []);
 
   const langContextValue = React.useMemo(() => ({
     lang,
     toggleLang,
-  }), [lang]);
+  }), [lang, toggleLang]);
 
   return (
     <LangContext.Provider value={langContextValue}>

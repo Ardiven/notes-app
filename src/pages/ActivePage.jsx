@@ -17,7 +17,8 @@ function ActivePage() {
 
   React.useEffect(() => {
     fetchActiveNotes();
-  }, [fetchActiveNotes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function onKeywordChangeHandler(keyword) {
     setSearchParams({ keyword });

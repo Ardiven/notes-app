@@ -16,7 +16,14 @@ export function NotesProvider({ children }) {
     const [loading, setLoading] = React.useState(false);
     const [notesError, setNotesError] = React.useState(null);
 
-    const fetchActiveNotes = async () => {
+    // Stable refs — wrap in useCallback with empty deps so consumers'
+    // useEffect ([fetchActiveNotes]) does NOT re-fire on every render.
+    // Without this, every NotesProvider re-render produced a new function
+    // reference, which the context value also pointed at, which triggered
+    // ActivePage's useEffect, which called the fetch, which set loading,
+    // which re-rendered NotesProvider — infinite loop.
+
+    const fetchActiveNotes = React.useCallback(async () => {
         setLoading(true);
         setNotesError(null);
         const response = await getActiveNotes();
@@ -30,9 +37,9 @@ export function NotesProvider({ children }) {
 
         setNotes(Array.isArray(response.data) ? response.data : []);
         setLoading(false);
-    };
+    }, []);
 
-    const fetchArchiveNotes = async () => {
+    const fetchArchiveNotes = React.useCallback(async () => {
         setLoading(true);
         setNotesError(null);
         const response = await getArchivedNotes();
@@ -46,31 +53,9 @@ export function NotesProvider({ children }) {
 
         setNotes(Array.isArray(response.data) ? response.data : []);
         setLoading(false);
-    };
+    }, []);
 
-    const archiveNote = async (id) => {
-        const response = await archiveNoteAPI(id);
-
-        if (response.error) {
-            setNotesError(response.message);
-            return;
-        }
-
-        setNotes((prev) => prev.filter((note) => note.id !== id));
-    };
-
-    const unArchiveNote = async (id) => {
-        const response = await unarchiveNoteAPI(id);
-
-        if (response.error) {
-            setNotesError(response.message);
-            return;
-        }
-
-        setNotes((prev) => prev.filter((note) => note.id !== id));
-    };
-
-    const getSingleNote = async (id) => {
+    const getSingleNote = React.useCallback(async (id) => {
         setLoading(true);
         setNotesError(null);
         const response = await singleNoteApi(id);
@@ -84,9 +69,9 @@ export function NotesProvider({ children }) {
 
         setNotes(response.data ? [response.data] : []);
         setLoading(false);
-    };
+    }, []);
 
-    const addNote = async (note) => {
+    const addNote = React.useCallback(async (note) => {
         const response = await addNoteAPI(note);
 
         if (response.error) {
@@ -97,9 +82,31 @@ export function NotesProvider({ children }) {
         if (response.data) {
             setNotes((prev) => [response.data, ...prev]);
         }
-    };
+    }, []);
 
-    const deleteNote = async (id) => {
+    const archiveNote = React.useCallback(async (id) => {
+        const response = await archiveNoteAPI(id);
+
+        if (response.error) {
+            setNotesError(response.message);
+            return;
+        }
+
+        setNotes((prev) => prev.filter((note) => note.id !== id));
+    }, []);
+
+    const unArchiveNote = React.useCallback(async (id) => {
+        const response = await unarchiveNoteAPI(id);
+
+        if (response.error) {
+            setNotesError(response.message);
+            return;
+        }
+
+        setNotes((prev) => prev.filter((note) => note.id !== id));
+    }, []);
+
+    const deleteNote = React.useCallback(async (id) => {
         const response = await deleteNoteAPI(id);
 
         if (response.error) {
@@ -108,7 +115,7 @@ export function NotesProvider({ children }) {
         }
 
         setNotes((prev) => prev.filter((note) => note.id !== id));
-    };
+    }, []);
 
     const value = React.useMemo(() => ({
         notes,
@@ -121,7 +128,7 @@ export function NotesProvider({ children }) {
         fetchArchiveNotes,
         deleteNote,
         addNote,
-    }), [notes, loading, notesError]);
+    }), [notes, loading, notesError, getSingleNote, archiveNote, unArchiveNote, fetchActiveNotes, fetchArchiveNotes, deleteNote, addNote]);
 
     return (
         <NotesContext.Provider value={value}>

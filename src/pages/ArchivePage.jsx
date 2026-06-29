@@ -17,7 +17,8 @@ function ArchivePage() {
 
   React.useEffect(() => {
     fetchArchiveNotes();
-  }, [fetchArchiveNotes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function onKeywordChangeHandler(keyword) {
     setSearchParams({ keyword });

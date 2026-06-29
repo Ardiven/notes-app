@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
     }, []);
 
 
-    const onlogin = async (email, password) => {
+    const onlogin = React.useCallback(async (email, password) => {
         setLoading(true);
         setAuthError(null);
         setAuthSuccess(null);
@@ -50,14 +50,16 @@ export function AuthProvider({ children }) {
         setUser(response.data.name);
         setLoading(false);
         return { error: false };
-    };
+    }, []);
 
-    const onlogout = () => {
+    const onlogout = React.useCallback(() => {
         setUser(null);
         localStorage.removeItem('accessToken');
-    };
+        setAuthError(null);
+        setAuthSuccess(null);
+    }, []);
 
-    const onregister = async (name, email, password) => {
+    const onregister = React.useCallback(async (name, email, password) => {
         setLoading(true);
         setAuthError(null);
         setAuthSuccess(null);
@@ -72,19 +74,21 @@ export function AuthProvider({ children }) {
         setLoading(false);
         setAuthSuccess('register-success');
         return { error: false };
-    };
+    }, []);
+
+    const value = React.useMemo(() => ({
+        user,
+        onlogin,
+        onlogout,
+        onregister,
+        loading,
+        initializing,
+        authError,
+        authSuccess,
+    }), [user, loading, initializing, authError, authSuccess, onlogin, onlogout, onregister]);
 
     return (
-        <AuthContext.Provider value={{
-            user,
-            onlogin,
-            onlogout,
-            onregister,
-            loading,
-            initializing,
-            authError,
-            authSuccess,
-        }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

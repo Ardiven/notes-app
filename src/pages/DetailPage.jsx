@@ -13,7 +13,8 @@ function DetailPage() {
 
     React.useEffect(() => {
         getSingleNote(id);
-    }, [id, getSingleNote]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
 
     const handleArchive = async (note) => {
         if (note.archived) {
