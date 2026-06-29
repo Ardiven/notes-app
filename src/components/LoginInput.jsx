@@ -1,7 +1,7 @@
 import React from "react";
 import useAuth from "@hooks/useAuth";
 import useInput from "@hooks/useInput";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useLang from "@hooks/useLang";
 import { validateAuthForm } from "@utils/validation";
 
@@ -10,7 +10,6 @@ function LoginInput() {
   const [email, handleEmailChange] = useInput("");
   const [password, handlePasswordChange] = useInput("");
   const { lang } = useLang();
-  const navigate = useNavigate();
 
   const [touched, setTouched] = React.useState({});
   const [errors, setErrors] = React.useState({});
@@ -42,10 +41,9 @@ function LoginInput() {
     setErrors(fieldErrors);
     setTouched({ email: true, password: true });
     if (Object.keys(fieldErrors).length > 0) return;
-    const result = await onlogin(email, password);
-    if (result && !result.error) {
-      navigate("/");
-    }
+    // No navigate() here — the RedirectIfAuthed route guard will
+    // bounce the user to '/' automatically once user state is set.
+    await onlogin(email, password);
   };
 
   return (

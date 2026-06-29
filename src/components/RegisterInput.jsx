@@ -1,7 +1,7 @@
 import React from "react";
 import useAuth from "@hooks/useAuth";
 import useInput from "@hooks/useInput";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useLang from "@hooks/useLang";
 import { validateAuthForm } from "@utils/validation";
 
@@ -11,7 +11,6 @@ function RegisterInput() {
     const [email, handleEmailChange] = useInput("");
     const [password, handlePasswordChange] = useInput("");
     const { lang } = useLang();
-    const navigate = useNavigate();
 
     const [touched, setTouched] = React.useState({});
     const [errors, setErrors] = React.useState({});
@@ -29,10 +28,10 @@ function RegisterInput() {
         setErrors(fieldErrors);
         setTouched({ name: true, email: true, password: true });
         if (Object.keys(fieldErrors).length > 0) return;
-        const result = await onregister(name, email, password);
-        if (result && !result.error) {
-            navigate("/login");
-        }
+        // No navigate() here — authSuccess state surfaces the success message
+        // and the user clicks the link to /login (which RedirectIfAuthed will
+        // not bounce from, since registration does NOT set user state).
+        await onregister(name, email, password);
     };
 
     const fieldClass = (field) =>

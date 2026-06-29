@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import LoginPage from '@pages/LoginPage';
 import RegisterPage from '@pages/RegisterPage';
 import ActivePage from '@pages/ActivePage';
@@ -16,8 +16,28 @@ import Loading from '@components/Loading';
 
 import './styles/style.css';
 
-function AuthGate({ children }) {
-  const { user, initializing } = useAuth();
+function RequireAuth({ children }) {
+  const { user } = useAuth();
+  if (!user) {
+    // Declarative redirect — fires during render based on current state,
+    // NOT imperatively after an async boundary. Replaces the navigate('/')
+    // call that was racing the auth state update.
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+function RedirectIfAuthed({ children }) {
+  const { user } = useAuth();
+  if (user) {
+    // If user is logged in but on /login or /register, bounce to /
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
+
+function AuthGate() {
+  const { initializing } = useAuth();
 
   if (initializing) {
     return (
@@ -34,20 +54,27 @@ function AuthGate({ children }) {
         <header><NoteHeader /></header>
         <main>
           <Routes>
-            {!user ? (
-              <>
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/*" element={<LoginPage />} />
-              </>
-            ) : (
-              <>
-                <Route path="/" element={<ActivePage />} />
-                <Route path="/archives" element={<ArchivePage />} />
-                <Route path="/notes/new" element={<AddPage />} />
-                <Route path="/notes/:id" element={<DetailPage />} />
-                <Route path="/*" element={<ActivePage />} />
-              </>
-            )}
+            <Route path="/login" element={
+              <RedirectIfAuthed><LoginPage /></RedirectIfAuthed>
+            } />
+            <Route path="/register" element={
+              <RedirectIfAuthed><RegisterPage /></RedirectIfAuthed>
+            } />
+            <Route path="/" element={
+              <RequireAuth><ActivePage /></RequireAuth>
+            } />
+            <Route path="/archives" element={
+              <RequireAuth><ArchivePage /></RequireAuth>
+            } />
+            <Route path="/notes/new" element={
+              <RequireAuth><AddPage /></RequireAuth>
+            } />
+            <Route path="/notes/:id" element={
+              <RequireAuth><DetailPage /></RequireAuth>
+            } />
+            <Route path="*" element={
+              <RequireAuth><ActivePage /></RequireAuth>
+            } />
           </Routes>
         </main>
       </div>
