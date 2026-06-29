@@ -1,24 +1,22 @@
 import React from "react";
-import NoteInput from "../components/NoteInput";
-import { useNavigate } from "react-router-dom";
-import useNote from "../hooks/useNote";
+import NoteInput from "@components/NoteInput";
+import useNote from "@hooks/useNote";
 
+function AddPage() {
+    const { addNote, notesError } = useNote();
 
+    const handlerAddNote = async (note) => {
+        await addNote(note);
+    };
 
-function AddPage () {
-    const {addNote} = useNote();
-
-    const handlerAddNote = (Note) => {
-        addNote(Note)
-    }
-
-    return(
+    return (
         <main>
             <section className="add-new-page">
-                <NoteInput addNote={handlerAddNote}/>
+                <NoteInput addNote={handlerAddNote} />
+                {notesError && <p className="form-error">{notesError}</p>}
             </section>
         </main>
-    )
+    );
 }
 
 export default AddPage;

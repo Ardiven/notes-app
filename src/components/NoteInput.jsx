@@ -1,11 +1,10 @@
 import React from "react";
-import useInput from "../hooks/UseInput";
+import useInput from "@hooks/useInput";
 import NoteActionButton from "./NoteActionButton";
 import {useNavigate} from "react-router-dom";
 import { FiCheckCircle } from "react-icons/fi";
 
 function NoteInput ({addNote}){
-
   const navigate = useNavigate();
   const [title, onTitleChangeEventHandler, setTitle] = useInput('');
   const [body, onBodyChangeEventHandler, setBody] = useInput('');
@@ -21,14 +20,11 @@ function NoteInput ({addNote}){
     setTitle('');
     setBody('');
     navigate('/');
-
-
   };
-
 
   return (
       <div className="add-new-page__input" data-testid="note-input">
-     
+
           <input
             className="add-new-page__input__title"
             type="text"

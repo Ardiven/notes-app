@@ -1,11 +1,11 @@
-import React from "react"
-import useAuth from "../hooks/useAuth"
-import useInput from "../hooks/UseInput"
-import { Link } from "react-router-dom"
-import useLang from "../hooks/useLang";
+import React from "react";
+import useAuth from "@hooks/useAuth";
+import useInput from "@hooks/useInput";
+import { Link } from "react-router-dom";
+import useLang from "@hooks/useLang";
 
-function LoginInput(){
-  const {onlogin, loading} = useAuth();
+function LoginInput() {
+  const { onlogin, loading, authError } = useAuth();
   const [email, handleEmailChange] = useInput('');
   const [password, handlePasswordChange] = useInput('');
   const { lang } = useLang();
@@ -14,6 +14,7 @@ function LoginInput(){
     e.preventDefault();
     onlogin(email, password);
   };
+
   return (
     <>
       <h2>{lang === "id" ? "Yuk, login untuk menggunakan aplikasi." : "Login to use app, please."}</h2>
@@ -22,12 +23,13 @@ function LoginInput(){
         <input type="email" id="email" value={email} onChange={handleEmailChange} />
         <label htmlFor="password">Password</label>
         <input type="password" id="password" value={password} onChange={handlePasswordChange} />
-        <button>{!loading ? 'Masuk' : 'loading...'}</button>
+        <button>{!loading ? (lang === "id" ? "Masuk" : "Login") : 'loading...'}</button>
+        {authError && <p className="form-error">{authError}</p>}
       </form>
       <p>
         {lang === "id" ? "Belum punya akun?" : "Don't have an account?"}
         <Link to="/register">
-            {lang === "id" ? "Daftar di sini" : "Register here"}
+          {lang === "id" ? "Daftar di sini" : "Register here"}
         </Link>
       </p>
     </>

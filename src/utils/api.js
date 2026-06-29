@@ -18,20 +18,21 @@ async function fetchWithToken(url, options = {}) {
   });
 }
 
+function toErrorResult(responseJson) {
+  return { error: true, message: responseJson.message, data: null };
+}
+
 async function login({ email, password }) {
   const response = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
 
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    alert(responseJson.message);
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -40,20 +41,17 @@ async function login({ email, password }) {
 async function register({ name, email, password }) {
   const response = await fetch(`${BASE_URL}/register`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, password }),
   });
 
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    alert(responseJson.message);
-    return { error: true };
+    return toErrorResult(responseJson);
   }
 
-  return { error: false };
+  return { error: false, data: responseJson.data };
 }
 
 async function getUserLogged() {
@@ -61,7 +59,7 @@ async function getUserLogged() {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -70,16 +68,14 @@ async function getUserLogged() {
 async function addNote({ title, body }) {
   const response = await fetchWithToken(`${BASE_URL}/notes`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title, body }),
   });
 
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -90,7 +86,7 @@ async function getActiveNotes() {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -101,7 +97,7 @@ async function getArchivedNotes() {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -112,7 +108,7 @@ async function getNote(id) {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -126,7 +122,7 @@ async function archiveNote(id) {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -140,7 +136,7 @@ async function unarchiveNote(id) {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };
@@ -154,7 +150,7 @@ async function deleteNote(id) {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return toErrorResult(responseJson);
   }
 
   return { error: false, data: responseJson.data };

@@ -1,5 +1,5 @@
-import React from "react"
-import { login, register, putAccessToken, getUserLogged } from "../utils/api";
+import React from "react";
+import { login, register, putAccessToken, getUserLogged } from "@utils/api";
 
 const AuthContext = React.createContext();
 
@@ -8,6 +8,8 @@ export function AuthProvider({ children }) {
     const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [initializing, setInitializing] = React.useState(true);
+    const [authError, setAuthError] = React.useState(null);
+    const [authSuccess, setAuthSuccess] = React.useState(null);
 
     React.useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
@@ -18,13 +20,11 @@ export function AuthProvider({ children }) {
                     if (!response.error) {
                         setUser(response.data.name);
                     } else {
-                        // token invalid/expired → bersihkan agar tidak loop
                         localStorage.removeItem('accessToken');
                     }
                     setInitializing(false);
                 })
                 .catch(() => {
-                    // request gagal (network/CORS) → tetap lanjut agar UI tidak stuck
                     localStorage.removeItem('accessToken');
                     setInitializing(false);
                 });
@@ -36,40 +36,58 @@ export function AuthProvider({ children }) {
 
     const onlogin = async (email, password) => {
         setLoading(true);
+        setAuthError(null);
+        setAuthSuccess(null);
+        const response = await login({ email, password });
 
-        const response = await login({email, password})
-        const data = response.data
-
-        if (response.error){
+        if (response.error) {
             setLoading(false);
-            throw new Error(response.message)
+            setAuthError(response.message || 'Login failed');
+            return { error: true, message: response.message };
         }
 
-        putAccessToken(data.accessToken);
+        putAccessToken(response.data.accessToken);
+        setUser(response.data.name);
         setLoading(false);
-        window.location.reload();
-        
-    }
-    const onlogout = () =>{
+        return { error: false };
+    };
+
+    const onlogout = () => {
         setUser(null);
         localStorage.removeItem('accessToken');
-    }
+    };
 
     const onregister = async (name, email, password) => {
         setLoading(true);
-        const response = await register({name, email, password})
-        if (response.error){
+        setAuthError(null);
+        setAuthSuccess(null);
+        const response = await register({ name, email, password });
+
+        if (response.error) {
             setLoading(false);
-            throw new Error(response.message)
+            setAuthError(response.message || 'Register failed');
+            return { error: true, message: response.message };
         }
+
         setLoading(false);
-    }
+        setAuthSuccess('register-success');
+        return { error: false };
+    };
 
     return (
-        <AuthContext.Provider value={{user, onlogin, onlogout,onregister, loading, initializing}}>
+        <AuthContext.Provider value={{
+            user,
+            onlogin,
+            onlogout,
+            onregister,
+            loading,
+            initializing,
+            authError,
+            authSuccess,
+        }}>
             {children}
         </AuthContext.Provider>
-    )
+    );
 }
 
 export default AuthContext;

@@ -1,26 +1,20 @@
-import React from "react";
-import {J, validateProps } from "../utils/validation";
+import React from 'react';
 
-const buttonSchema = J.object({
-  variant: J.string().required(),
-  onClick: J.func().required(),
-  note: J.object().optional(),
-  icon: J.any().required(),
-});
+function NoteActionButton({ variant, onClick, icon }) {
+  const handleClick = (e) => {
+    e?.preventDefault?.();
+    onClick?.(e);
+  };
 
-
-
-function NoteActionButton(props){
-  const { variant, onClick, note, icon } = validateProps(buttonSchema, props, 'NoteActionButton');
-  return(
-      <button
-        className="action"
-        type="button"
-          onClick={(e) => note ? onClick(note.id, e) : onClick(e) }
-        title={variant}
-      >
-        {icon}
-      </button>
+  return (
+    <button
+      className="action"
+      type="button"
+      onClick={handleClick}
+      title={variant}
+    >
+      {icon}
+    </button>
   );
 }
 

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import LangContext from "../contexts/LangContext";
+import LangContext from "@contexts/LangContext";
 
 export default function useLang() {
   return useContext(LangContext);
