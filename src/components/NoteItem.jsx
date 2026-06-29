@@ -12,7 +12,10 @@ function NoteItem({ note }) {
       data-note-id={note.id}
     >
       <div className="note-item__content" data-testid="note-item-content">
-        <Link to={`/notes/${note.id}`}>{note.title}</Link>
+        <h3 className="note-item__title">
+          <Link to={`/notes/${note.id}`}>{note.title}</Link>
+        </h3>
+        <div className="note-item__perforation" />
         <p className="note-item__date" data-testid="note-item-date">
           {formatDate(note.createdAt)}
         </p>

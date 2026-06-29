@@ -34,6 +34,7 @@ function NoteInput ({addNote}){
             required
             data-testid="note-input-title-field"
           />
+          <div className="add-new-page__perforation" />
           <textarea
             className="add-new-page__input__body"
             placeholder="Tuliskan catatanmu di sini ..."

@@ -21,7 +21,7 @@ function NoteHeader() {
 
     return (
         <>
-            <h1><Link to="/">{lang === 'id' ? 'Aplikasi Catatan' : 'Note App'}</Link></h1>
+            <h1 className="header__title"><Link to="/">{lang === 'id' ? 'Aplikasi Catatan' : 'Note App'}</Link></h1>
             <NoteNav />
             <button className="toggle-lang" onClick={toggleLang}><MdGTranslate  /></button>
             <button className="toggle-theme" onClick={toggleTheme}> {theme === 'light' ? <FiMoon /> : <FiSun /> }</button>

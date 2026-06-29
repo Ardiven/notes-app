@@ -1,24 +1,58 @@
+/* ============================================
+   Tokens — warna, spacing, typography
+   ============================================ */
+
 :root {
-  --primary: #BB86FC;
-  --primary-variant: #3700B3;
-  --secondary: #03DAC6;
-  --background: #121212;
-  --surface: #121212;
-  --error: #CF6679;
-  --warning: #F39C12;
-  --success: #03DAC6;
-  --on-background: #FFFFFF;
-  --on-background-grey: #c7c7c7;
-  --on-surface: #FFFFFF;
+  /* Warna — amber-ink (aksen utama) + archive-teal (arsip/success) */
+  --ink-amber:           #E8A33D;
+  --ink-amber-dim:       #B8801F;
+  --archive-teal:        #4FB6A8;
+  --background:          #14161B;
+  --surface:              #1C1F26;
+  --surface-raised:       #242830;
+  --error:                #E2554F;
+  --warning:              #E8A33D;
+  --success:              #4FB6A8;
+  --on-background:        #ECEAE4;
+  --on-background-grey:   #8D8980;
+  --on-surface:           #ECEAE4;
+  --border-hairline:      #33373F;
+
+  /* Spacing — kelipatan 8px */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 52px;
+
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Inter', sans-serif;
+  --font-meta:    ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --text-display-lg: 3.5rem;
+  --text-display-md: 1.75rem;
+  --text-body-lg:    1.25rem;
+  --text-body:       1.125rem;
+  --text-ui:         1rem;
+  --text-meta:       0.8125rem;
 }
 
 [data-theme="light"] {
-  --background: #DDDDDD;
-  --surface: #FFFFFF;
-  --on-background: #333333;
-  --on-background-grey: #6d6d6d;
-  --on-surface: #333333;
+  --background:          #EFEBE2;
+  --surface:              #FBFAF6;
+  --surface-raised:       #FFFFFF;
+  --on-background:        #2B2A28;
+  --on-background-grey:   #6F6A61;
+  --on-surface:           #2B2A28;
+  --border-hairline:      #DAD4C6;
+  --ink-amber-dim:        #C98B1E;
 }
+
+/* ============================================
+   Reset & base
+   ============================================ */
 
 * {
   padding: 0;
@@ -27,136 +61,220 @@
 }
 
 a {
-  color: var(--on-background);
+  color: var(--ink-amber);
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
 }
 
+a:hover {
+  color: var(--ink-amber-dim);
+}
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
 }
+
+/* Transisi warna untuk seluruh tema (kecuali border tombol) */
+[data-theme] {
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+/* ============================================
+   App shell
+   ============================================ */
 
 .app-container {
   color: var(--on-background);
   background-color: var(--background);
   min-height: 100vh;
-  transition: all ease-in-out 0.5s;
+  font-family: var(--font-body);
 }
 
 header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
-  border-bottom: 1px solid var(--on-background);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border-hairline);
 }
 
-header h1 {
+header h1,
+.header__title {
   flex: 1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-md);
+  letter-spacing: -0.01em;
+}
+
+.header__title a {
+  color: var(--on-background);
+}
+
+.header__title a:hover {
+  color: var(--ink-amber);
 }
 
 header .navigation ul li {
   display: inline-block;
-  font-size: 24px;
-  margin: 0 8px;
+  font-size: var(--text-body-lg);
+  margin: 0 var(--space-2);
 }
 
 main {
   margin: 0 auto;
-  padding: 32px 0;
+  padding: var(--space-5) 0;
   width: 90%;
   max-width: 1200px;
 }
 
+/* ============================================
+   Notes list — kartu katalog (signature)
+   ============================================ */
+
 .notes-list {
-  margin-top: 32px;
+  margin-top: var(--space-5);
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
-  padding: 16px 8px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-2);
 }
 
 .notes-list-empty {
-  margin-top: 32px;
-  padding: 16px 8px;
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-2);
 }
 
 .notes-list-empty p {
   text-align: center;
   color: var(--on-background-grey);
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
 }
+
+/* Kartu dengan folded corner */
 .note-item {
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid var(--on-background);
-  border-top: 5px solid;
+  position: relative;
+  padding: var(--space-3);
+  background-color: var(--surface);
+  border: 1px solid var(--border-hairline);
+  /* Lipat pojok kanan-atas */
+  clip-path: polygon(
+    0 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% 100%,
+    0 100%
+  );
+  transition: background-color 0.3s ease-in-out;
+}
+
+.note-item:hover {
+  background-color: var(--surface-raised);
+}
+
+/* Triangle penutup lipatan */
+.note-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  background-color: var(--surface-raised);
+  clip-path: polygon(0 0, 100% 100%, 100% 0);
+  box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
 }
 
 .note-item__title {
-  margin: 4px 0;
+  margin: var(--space-1) 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-body-lg);
+  color: var(--on-surface);
 }
 
-.note-item__createdAt {
+.note-item__title a {
+  color: var(--on-surface);
+}
+
+.note-item__title a:hover {
+  color: var(--ink-amber);
+}
+
+.note-item__date {
   color: var(--on-background-grey);
-  font-size: 14px;
-  margin: 4px 0;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+  margin: var(--space-1) 0;
 }
 
 .note-item__body {
-  margin-top: 16px;
+  margin-top: var(--space-3);
   overflow: hidden;
   display: -webkit-box;
   text-overflow: ellipsis;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
+  color: var(--on-surface);
+  line-height: 1.6;
 }
+
+/* Perforasi dashed — pemisah title↔date */
+.note-item__perforation,
+.detail-page__perforation,
+.add-new-page__perforation {
+  border-top: 1px dashed var(--border-hairline);
+  margin: var(--space-2) 0;
+}
+
+/* ============================================
+   Note detail
+   ============================================ */
 
 .detail-page {
   margin: 0 auto;
-  margin-top: 32px; 
+  margin-top: var(--space-5);
   width: 90%;
 }
 
 .detail-page__title {
-  font-size: 48px;
-  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-lg);
+  line-height: 1.1;
+  margin-bottom: var(--space-2);
   word-wrap: break-word;
+  letter-spacing: -0.02em;
+  color: var(--on-background);
 }
 
-.detail-page__createdAt {
-  color: var(--on-background-grey)
+.detail-page__createdAt,
+.detail-page__date {
+  color: var(--on-background-grey);
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
 }
 
 .detail-page__body {
-  line-height: 1.5;
-  margin-top: 36px;
-  font-size: 18px;
+  line-height: 1.6;
+  margin-top: var(--space-4);
+  font-size: var(--text-body);
+  color: var(--on-background);
 }
 
-.detail-page__action, .homepage__action, .add-new-page__action {
-  position: fixed;
-  display: flex;
-  gap: 16px;
-  bottom: 32px;
-  right: 32px;
-}
-
-.action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  border: 0;
-  width: 50px;
-  height: 50px;
-  border-radius: 50px;
-  background-color: var(--on-background);
-  color: var(--background);
-  padding: 8px;
-  cursor: pointer;
-}
+/* ============================================
+   Add page
+   ============================================ */
 
 .add-new-page__input {
-  margin-top: 32px;
+  margin-top: var(--space-5);
 }
 
 .add-new-page__input .add-new-page__input__title {
@@ -164,14 +282,17 @@ main {
   background-color: transparent;
   border: 0;
   color: var(--on-background);
-  font-family: 'Inter', sans-serif;
-  font-size: 64px;
-  font-weight: bold;
-  padding: 8px 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-lg);
+  letter-spacing: -0.02em;
+  padding: var(--space-2) 0;
 }
 
 .add-new-page__input__title::placeholder {
   color: var(--on-background-grey);
+  font-family: var(--font-display);
+  font-style: italic;
 }
 
 .add-new-page__input .add-new-page__input__body {
@@ -179,104 +300,255 @@ main {
   background-color: transparent;
   border: 0;
   color: var(--on-background);
-  font-family: 'Inter', sans-serif;
-  font-size: 24px;
-  padding: 8px 0;
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  padding: var(--space-2) 0;
   min-height: 500px;
+  resize: vertical;
 }
 
 [data-placeholder]:empty::before {
   content: attr(data-placeholder);
-  color: var(--on-background-grey)
+  color: var(--on-background-grey);
+  font-family: var(--font-body);
 }
 
-.search-bar input {
-  margin: 16px 0;
-  font-family: 'Inter', sans-serif;
+/* ============================================
+   Auth form
+   ============================================ */
+
+.input-login,
+.input-register {
+  margin: var(--space-5) 0;
+}
+
+.input-login label,
+.input-register label {
+  font-size: var(--text-body-lg);
+  font-weight: lighter;
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.input-login input,
+.input-register input {
+  font-size: var(--text-body);
+  font-family: var(--font-body);
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-3);
+  display: block;
+  width: 100%;
+  padding: var(--space-2);
   background-color: transparent;
-  border: 1px solid var(--on-background);
+  border-radius: 8px;
+  border: 1px solid var(--border-hairline);
+  color: var(--on-background);
+  transition: border-color 0.2s ease-in-out, border-width 0.2s ease-in-out;
+}
+
+.input-login input:focus,
+.input-register input:focus {
+  outline: none;
+  border-color: var(--ink-amber);
+  border-width: 2px;
+  /* kompensasi agar layout tidak shift saat border menebal */
+  padding: calc(var(--space-2) - 1px);
+}
+
+.input-login button,
+.input-register button {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-ui);
+  width: 100%;
+  padding: var(--space-3);
+  border: 0;
+  border-radius: 8px;
+  background-color: var(--ink-amber);
+  color: var(--background);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.input-login button:hover,
+.input-register button:hover {
+  background-color: var(--ink-amber-dim);
+}
+
+.input-login button:focus-visible,
+.input-register button:focus-visible {
+  outline: 2px solid var(--ink-amber);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Search bar
+   ============================================ */
+
+.search-bar input {
+  margin: var(--space-3) 0;
+  font-family: var(--font-body);
+  background-color: transparent;
+  border: 1px solid var(--border-hairline);
   border-radius: 4px;
-  padding: 8px;
+  padding: var(--space-2);
   width: 100%;
   color: var(--on-background);
+  font-size: var(--text-body);
+  transition: border-color 0.2s ease-in-out;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--ink-amber);
 }
 
 .search-bar input::placeholder {
   color: var(--on-background-grey);
 }
 
-.toggle-theme, .toggle-lang {
+/* ============================================
+   Floating actions & icon buttons
+   ============================================ */
+
+.detail-page__action,
+.homepage__action,
+.add-new-page__action {
+  position: fixed;
+  display: flex;
+  gap: var(--space-3);
+  bottom: var(--space-5);
+  right: var(--space-5);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-ui);
+  border: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: var(--surface-raised);
+  color: var(--background);
+  padding: var(--space-2);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.action:hover {
+  transform: scale(1.05);
+}
+
+.action:focus-visible {
+  outline: 2px solid var(--ink-amber);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Header icon buttons (theme/lang/logout)
+   ============================================ */
+
+.toggle-theme,
+.toggle-lang {
   background-color: transparent;
   border: 0;
   cursor: pointer;
   color: var(--on-background);
   display: flex;
   align-items: center;
-  margin: 0 16px;
+  margin: 0 var(--space-3);
+  padding: var(--space-1);
+  border-radius: 4px;
+  transition: color 0.2s ease-in-out;
 }
 
 .toggle-theme {
-  font-size: 36px;
+  font-size: var(--text-display-md);
 }
 
 .toggle-lang {
-  font-size: 28px;
+  font-size: var(--text-body-lg);
 }
 
-.input-login, .input-register {
-  margin: 32px 0;
+.toggle-theme:hover,
+.toggle-lang:hover {
+  color: var(--ink-amber);
 }
 
-.input-login label, .input-register label {
-  font-size: 24px;
-  font-weight: lighter;
-}
-
-.input-login input, .input-register input {
-  font-size: 18px;
-  font-family: 'Inter', sans-serif;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  display: block;
-  width: 100%;
-  padding: 8px;
-  background-color: transparent;
-  border-radius: 8px;
-  border: 3px solid var(--on-background);
-  color: var(--on-background)
-}
-
-.input-login button, .input-register button {
-  font-family: 'Inter', sans-serif;
-  font-weight: bold;
-  font-size: 24px;
-  width: 100%;
-  padding: 12px;
-  border: 0;
-  border-radius: 8px;
-  background-color: var(--on-background);
-  color: var(--background);
-  cursor: pointer;
+.toggle-theme:focus-visible,
+.toggle-lang:focus-visible {
+  outline: 2px solid var(--ink-amber);
+  outline-offset: 2px;
 }
 
 .button-logout {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   background-color: transparent;
   border: 0;
-  font-size: 28px;
+  font-size: var(--text-body-lg);
   cursor: pointer;
   color: var(--on-background);
+  padding: var(--space-1);
+  border-radius: 4px;
+  transition: color 0.2s ease-in-out;
 }
+
+.button-logout:hover {
+  color: var(--ink-amber);
+}
+
+.button-logout:focus-visible {
+  outline: 2px solid var(--ink-amber);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Form messages (monospace meta)
+   ============================================ */
+
+.form-error,
+.form-success {
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+  margin-top: var(--space-2);
+}
+
+.form-error {
+  color: var(--error);
+}
+
+.form-success {
+  color: var(--archive-teal);
+}
+
+/* ============================================
+   Page heading (h2 di Active/Archive)
+   ============================================ */
+
+.homepage h2,
+.add-new-page h2,
+.detail-page h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-md);
+  color: var(--on-background);
+  margin-bottom: var(--space-3);
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
 
 @media screen and (min-width: 650px) {
   .notes-list {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .detail-page__title { 
-    font-size: 64px;
+    gap: var(--space-4);
   }
 }
 
@@ -289,17 +561,6 @@ main {
 @media screen and (min-width: 1200px) {
   .notes-list {
     grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
   }
-}
-
-.form-error {
-  color: var(--error);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-}
-
-.form-success {
-  color: var(--success);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
 }
